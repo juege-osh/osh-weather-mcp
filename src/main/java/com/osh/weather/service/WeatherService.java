@@ -1,5 +1,7 @@
 package com.osh.weather.service;
 
+import com.osh.weather.model.AmapWeatherResponse;
+import org.springframework.beans.factory.annotation.Value;
 import tools.jackson.databind.JsonNode;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.ai.mcp.annotation.McpToolParam;
@@ -13,6 +15,9 @@ public class WeatherService {
 
     private static final String GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
     private static final String FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+
+    @Value("${api.key}")
+    private String apiKey;
 
     private final RestClient restClient;
 
@@ -34,8 +39,8 @@ public class WeatherService {
         this.restClient = RestClient.create();
     }
 
-    @McpTool(description = "获取指定城市的实时天气信息，包括温度、湿度、风速和天气状况")
-    public String getWeather(@McpToolParam(description = "城市名称（支持中英文，如 Beijing、上海）", required = true) String city) {
+    @McpTool(description = "获取国外城市的实时天气信息，包括温度、湿度、风速和天气状况")
+    public String getForeignWeather(@McpToolParam(description = "城市名称（支持中英文，如 Beijing、上海）", required = true) String city) {
         try {
             // 第一步：地理编码，将城市名转为经纬度
             JsonNode geoResult = geocodeCity(city);
@@ -111,13 +116,21 @@ public class WeatherService {
         String weatherDesc = WEATHER_CODE_MAP.getOrDefault(weatherCode, "未知（代码" + weatherCode + "）");
 
         return String.format(
-                "🌍 %s（%s）的实时天气：\n" +
-                "  天气状况：%s\n" +
-                "  当前温度：%.1f°C（体感 %.1f°C）\n" +
-                "  相对湿度：%d%%\n" +
-                "  风速：%.1f km/h\n" +
-                "数据来源：Open-Meteo（免费开放天气API）",
+                """
+                        🌍 %s（%s）的实时天气：
+                          天气状况：%s
+                          当前温度：%.1f°C（体感 %.1f°C）
+                          相对湿度：%d%%
+                          风速：%.1f km/h""",
                 cityName, country, weatherDesc, temperature, apparentTemp, humidity, windSpeed
         );
+    }
+
+    @McpTool(description = "查询国内天气")
+    public AmapWeatherResponse getWeather(@McpToolParam(required = true,description = "城市") String city) {
+        return restClient.get()
+                .uri("https://restapi.amap.com/v3/weather/weatherInfo?city={city}&key={key}&extensions=all", city, apiKey)
+                .retrieve()
+                .body(AmapWeatherResponse.class);
     }
 }
