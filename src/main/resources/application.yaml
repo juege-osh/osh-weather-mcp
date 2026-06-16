@@ -6,6 +6,7 @@ spring:
       server:
         name: weather-mcp-server
         version: 1.0.0
+        protocol: SSE
 
 server:
   port: 8080

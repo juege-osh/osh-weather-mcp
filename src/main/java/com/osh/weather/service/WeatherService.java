@@ -5,9 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import tools.jackson.databind.JsonNode;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.ai.mcp.annotation.McpToolParam;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClient;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -36,7 +40,14 @@ public class WeatherService {
     );
 
     public WeatherService() {
-        this.restClient = RestClient.create();
+        HttpClient httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(5))
+                .build();
+        JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
+        requestFactory.setReadTimeout(Duration.ofSeconds(10));
+        this.restClient = RestClient.builder()
+                .requestFactory(requestFactory)
+                .build();
     }
 
     @McpTool(description = "获取国外城市的实时天气信息，包括温度、湿度、风速和天气状况")
@@ -128,9 +139,13 @@ public class WeatherService {
 
     @McpTool(description = "查询国内天气")
     public AmapWeatherResponse getWeather(@McpToolParam(required = true,description = "城市") String city) {
-        return restClient.get()
-                .uri("https://restapi.amap.com/v3/weather/weatherInfo?city={city}&key={key}&extensions=all", city, apiKey)
-                .retrieve()
-                .body(AmapWeatherResponse.class);
+        try {
+            return restClient.get()
+                    .uri("https://restapi.amap.com/v3/weather/weatherInfo?city={city}&key={key}&extensions=all", city, apiKey)
+                    .retrieve()
+                    .body(AmapWeatherResponse.class);
+        } catch (RestClientException e) {
+            throw new IllegalStateException("调用高德天气接口失败或超时：" + e.getMessage(), e);
+        }
     }
 }
