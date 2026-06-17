@@ -9,7 +9,7 @@ spring:
         protocol: STREAMABLE
 
 server:
-  port: 8080
+  port: 32180
 
 api:
   key: ${AMAP_API_KEY:ea7733c48f513881ca52791f08c0f9b1}

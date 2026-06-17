@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     image: osh-weather-mcp:local
     ports:
-      - "8080:8080"
+      - "32180:32180"
     environment:
       AMAP_API_KEY: ${AMAP_API_KEY:-ea7733c48f513881ca52791f08c0f9b1}
     restart: unless-stopped

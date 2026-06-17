@@ -62,7 +62,7 @@ chmod +x mvnw
 默认端口：
 
 ```text
-http://localhost:8080
+http://localhost:32180
 ```
 
 ### 方式 B：Docker 启动
@@ -101,13 +101,13 @@ docker compose up -d --build
 ### 国外天气
 
 ```bash
-curl "http://localhost:8080/getForeignWeather?city=Tokyo"
+curl "http://localhost:32180/getForeignWeather?city=Tokyo"
 ```
 
 ### 国内天气
 
 ```bash
-curl "http://localhost:8080/getWeather?city=110000"
+curl "http://localhost:32180/getWeather?city=110000"
 ```
 
 如果你想按城市名试，可以先看高德接口要求；当前代码是把 `city` 原样传给高德天气接口。
@@ -127,7 +127,7 @@ curl "http://localhost:8080/getWeather?city=110000"
 
   <script>
     document.getElementById("btn").onclick = async () => {
-      const res = await fetch("http://localhost:8080/getForeignWeather?city=Tokyo");
+      const res = await fetch("http://localhost:32180/getForeignWeather?city=Tokyo");
       const text = await res.text();
       document.getElementById("result").textContent = text;
     };
@@ -143,7 +143,7 @@ curl "http://localhost:8080/getWeather?city=110000"
 如果你不想处理浏览器跨域，Node.js 更省事。
 
 ```js
-const res = await fetch("http://localhost:8080/getForeignWeather?city=Tokyo");
+const res = await fetch("http://localhost:32180/getForeignWeather?city=Tokyo");
 const text = await res.text();
 console.log(text);
 ```
@@ -155,7 +155,7 @@ console.log(text);
 ### MCP 端点
 
 ```text
-http://localhost:8080/mcp
+http://localhost:32180/mcp
 ```
 
 ### 推荐方式
