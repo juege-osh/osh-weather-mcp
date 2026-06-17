@@ -12,7 +12,7 @@ server:
   port: 8080
 
 api:
-  key: ea7733c48f513881ca52791f08c0f9b1
+  key: ${AMAP_API_KEY:ea7733c48f513881ca52791f08c0f9b1}
 
 logging:
   level:
