@@ -6,10 +6,14 @@ spring:
       server:
         name: weather-mcp-server
         version: 1.0.0
-        protocol: SSE
+        protocol: STREAMABLE
 
 server:
   port: 8080
 
 api:
   key: ea7733c48f513881ca52791f08c0f9b1
+
+logging:
+  level:
+    io.modelcontextprotocol.spec: ERROR
