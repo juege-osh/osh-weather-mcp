@@ -67,7 +67,7 @@ http://localhost:32180
 
 ### 方式 B：Docker 启动
 
-如果你不想在宿主机安装 JDK 21，直接用容器就行。仓库里已经补了 `Dockerfile` 和 `compose.yaml`。
+如果你不想在宿主机安装 JDK 21，直接用容器就行。仓库里已经有 `Dockerfile` 和 `compose.yaml`。
 
 构建并启动：
 
@@ -93,6 +93,21 @@ docker compose down
 export AMAP_API_KEY=你的key
 docker compose up -d --build
 ```
+
+## GitHub Actions
+
+仓库里补了两条工作流：
+
+- `pr-check.yml`：Pull Request 时做 Maven 构建和打包校验
+- `deploy-release.yml`：推送 `release/**` 分支后，同步源码到 Linux 服务器并用 `docker compose up -d --build` 重新部署
+
+部署工作流需要配置这些 GitHub Secrets/Variables：
+
+- `DEPLOY_HOST`
+- `DEPLOY_USER`
+- `DEPLOY_PORT`
+- `DEPLOY_DIR`
+- `DEPLOY_SSH_PRIVATE_KEY`
 
 ## 方式一：直接测普通 HTTP 接口
 
