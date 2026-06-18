@@ -15,7 +15,7 @@ env:
   DEPLOY_HOST: ${{ secrets.DEPLOY_HOST || vars.DEPLOY_HOST || '43.242.200.25' }}
   DEPLOY_USER: ${{ secrets.DEPLOY_USER || vars.DEPLOY_USER || 'root' }}
   DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || vars.DEPLOY_PORT || '58753' }}
-  DEPLOY_DIR: ${{ secrets.DEPLOY_DIR || vars.DEPLOY_DIR || '/opt/osh-weather-mcp' }}
+  DEPLOY_DIR: ${{ secrets.BACKEND_DEPLOY_DIR || '/www/osh/008-mcp' }}
   BACKEND_JAR_NAME: ${{ vars.BACKEND_JAR_NAME || 'mcp-server-weather-0.0.1-SNAPSHOT.jar' }}
   DOCKER_COMPOSE_DIR: ${{ vars.DOCKER_COMPOSE_DIR || '/opt/docker-apps' }}
   BACKEND_SERVICE_NAME: ${{ vars.BACKEND_SERVICE_NAME || 'mcp-server-weather' }}
